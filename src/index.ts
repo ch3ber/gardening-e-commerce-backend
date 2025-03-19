@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import productosRouter from './routes/products';
+import productosRouter from '@/routes/products';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
