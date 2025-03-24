@@ -15,10 +15,14 @@
   "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a",
   "dependencies": {
     "@prisma/client": "6.5.0",
-    "express": "4.21.2"
+    "bcryptjs": "3.0.2",
+    "express": "4.21.2",
+    "express-validator": "7.2.1",
+    "jsonwebtoken": "9.0.2"
   },
   "devDependencies": {
     "@types/express": "5.0.0",
+    "@types/jsonwebtoken": "9.0.9",
     "@types/node": "22.13.10",
     "nodemon": "3.1.9",
     "prisma": "6.5.0",

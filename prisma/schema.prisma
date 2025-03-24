@@ -21,3 +21,12 @@ model Producto {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nombre    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
