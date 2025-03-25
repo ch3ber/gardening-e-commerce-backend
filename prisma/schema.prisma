@@ -129,9 +129,15 @@ model ProductoPedido {
   precio     Float
 }
 
+enum TipoPago {
+  TARJETA_CREDITO
+  TARJETA_DEBITO
+  TRANSFERENCIA_SPEI
+}
+
 model MetodoPago {
   id                Int      @id @default(autoincrement())
-  tipo              String
+  tipo              TipoPago
   cuentaTarjeta     String?
   cvv               String?
   nombreCliente     String?

@@ -91,6 +91,28 @@ async function main() {
     });
   }
 
+  await prisma.metodoPago.createMany({
+    data: [
+      {
+        tipo: 'TARJETA_CREDITO',
+        cuentaTarjeta: faker.finance.creditCardNumber(),
+        cvv: faker.finance.creditCardCVV(),
+        nombreCliente: faker.person.fullName(),
+      },
+      {
+        tipo: 'TARJETA_DEBITO',
+        cuentaTarjeta: faker.finance.creditCardNumber(),
+        cvv: faker.finance.creditCardCVV(),
+        nombreCliente: faker.person.fullName(),
+      },
+      {
+        tipo: 'TRANSFERENCIA_SPEI',
+        transferenciaSpei: faker.finance.accountNumber(),
+        nombreCliente: faker.person.fullName(),
+      },
+    ],
+  });
+
   console.log('🌱 Información inicial generada con éxito.');
 }
 
