@@ -9,6 +9,4 @@ router.use('/products', productsRoutes);
 router.use('/customers', customersRoutes);
 router.use('/auth', authRoutes);
 
-// aquí agrega futuras rutas
-
 export default router;
