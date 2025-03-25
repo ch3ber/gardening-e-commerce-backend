@@ -4,29 +4,148 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Producto {
-  id          Int      @id @default(autoincrement())
-  nombre      String
-  descripcion String
-  precio      Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  CLIENTE
+  VENDEDOR
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  nombre    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
+  password     String
+  nombres      String
+  apellidos    String
+  telefono     String
+  direccion    String
+  codigoPostal String
+  rol          Role         @default(CLIENTE)
+  carrito      Carrito?
+  pedidos      Pedido[]
+  comentarios  Comentario[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Producto {
+  id                 Int              @id @default(autoincrement())
+  nombre             String
+  descripcion        String
+  precio             Float
+  stock              Int
+  imagenes           ImagenProducto[]
+  categorias         Categoria[]      @relation("ProductosCategorias")
+  etiquetas          Etiqueta[]       @relation("ProductosEtiquetas")
+  departamento       String
+  descuento          Float?           @default(0)
+  precioConDescuento Float?
+  mesesSinIntereses  Boolean          @default(false)
+  mesesConIntereses  Int?
+  calificacion       Float?           @default(0)
+  marca              String
+  disponible         Boolean          @default(true)
+  caracteristicas    String?
+  tiempoEntrega      String?
+  estaEnRebaja       Boolean          @default(false)
+  comentarios        Comentario[]
+  creadoPor          String // nombre del vendedor o proveedor
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  ItemCarrito        ItemCarrito[]
+  ProductoPedido     ProductoPedido[]
+}
+
+model ImagenProducto {
+  id         Int      @id @default(autoincrement())
+  url        String
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  productoId Int
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  productos Producto[] @relation("ProductosCategorias")
+}
+
+model Etiqueta {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  productos Producto[] @relation("ProductosEtiquetas")
+}
+
+model Carrito {
+  id        Int           @id @default(autoincrement())
+  usuario   Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuarioId Int           @unique
+  items     ItemCarrito[]
+  updatedAt DateTime      @updatedAt
+}
+
+model ItemCarrito {
+  id         Int      @id @default(autoincrement())
+  carrito    Carrito  @relation(fields: [carritoId], references: [id], onDelete: Cascade)
+  carritoId  Int
+  producto   Producto @relation(fields: [productoId], references: [id])
+  productoId Int
+  cantidad   Int      @default(1)
+}
+
+model Pedido {
+  id               Int              @id @default(autoincrement())
+  numeroPedido     String           @unique
+  usuario          Usuario          @relation(fields: [usuarioId], references: [id])
+  usuarioId        Int
+  nombreCliente    String
+  correoCliente    String
+  telefonoCliente  String
+  direccionEntrega String
+  fecha            DateTime         @default(now())
+  estado           String           @default("pendiente")
+  facturacion      String?
+  total            Float
+  metodoPago       MetodoPago       @relation(fields: [metodoPagoId], references: [id])
+  metodoPagoId     Int
+  productosPedido  ProductoPedido[]
+  idTransaccion    String?
+}
+
+model ProductoPedido {
+  id         Int      @id @default(autoincrement())
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  pedidoId   Int
+  producto   Producto @relation(fields: [productoId], references: [id])
+  productoId Int
+  cantidad   Int
+  precio     Float
+}
+
+model MetodoPago {
+  id                Int      @id @default(autoincrement())
+  tipo              String
+  cuentaTarjeta     String?
+  cvv               String?
+  nombreCliente     String?
+  transferenciaSpei String?
+  pedidos           Pedido[]
+}
+
+model Comentario {
+  id         Int      @id @default(autoincrement())
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  productoId Int
+  contenido  String
+  estrellas  Int      @default(5)
+  createdAt  DateTime @default(now())
 }
