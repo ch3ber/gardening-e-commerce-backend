@@ -1,35 +1,15 @@
-import express, { Request, Response } from 'express';
-import productosRouter from '@/routes/products';
-import { PrismaClient } from '@prisma/client';
-
-// Routes
-import authRoutes from '@/routes/auth.routes';
-import { protect } from './middlewares/authMiddleware';
+import express from 'express';
+import apiRouter from '@/routes/api';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const prisma = new PrismaClient();
 
 app.use(express.json());
+app.use('/api/v1', apiRouter);
 
-app.use('/auth', authRoutes);
-app.use('/productos', productosRouter);
+const PORT = process.env.PORT || 3000;
 
-app.get('/perfil', protect, async (req, res) => {
-  const user = await prisma.usuario.findUnique({ where: { id: req.body.userId } });
-  res.json(user);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
-app.get('/productosprisma', async (req, res) => {
-  const productos = await prisma.producto.findMany();
-  res.json(productos);
-});
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Backend E-commerce funcionando!');
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+export default app;
