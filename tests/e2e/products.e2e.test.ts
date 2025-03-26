@@ -36,7 +36,6 @@ describe('E2E Productos API con DTO (/api/v1/products)', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(productDTO);
 
-    console.log(res.body);
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('id');
     expect(res.body.nombre).toEqual(productDTO.nombre);

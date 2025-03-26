@@ -19,7 +19,6 @@ export const protect = (req: Request, res: Response, next: NextFunction): void =
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_JWT_KEY || 'SECRET_KEY') as JwtPayload;
-    console.log('DEBUG: auth middleware ', decoded);
 
     if (decoded.rol === 'CLIENTE') {
       res.status(401).json({ error: 'No autorizado' });
