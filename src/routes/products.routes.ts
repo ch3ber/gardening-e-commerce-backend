@@ -1,13 +1,15 @@
 import { Router } from 'express';
+import * as ProductController from '@/controllers/products.controller';
+import { protect } from '@/middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.json({ message: 'Listado de productos' });
-});
+router.get('/', ProductController.getAll);
+router.get('/:id', ProductController.getById);
 
-router.get('/:id', (req, res) => {
-  res.json({ message: `Detalles del producto ${req.params.id}` });
-});
+// Proteger rutas no-GET
+router.post('/', protect, ProductController.create);
+router.put('/:id', protect, ProductController.update);
+router.delete('/:id', protect, ProductController.remove);
 
 export default router;
