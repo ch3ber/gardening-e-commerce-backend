@@ -1,4 +1,5 @@
 import { PrismaClient, Producto } from '@prisma/client';
+import { CreateProductDTO, UpdateProductDTO } from '@/dtos/product.dto';
 
 const prisma = new PrismaClient();
 
@@ -15,11 +16,11 @@ export const getProductById = async (id: number): Promise<Producto | null> => {
   });
 };
 
-export const createProduct = async (data: Producto): Promise<Producto> => {
+export const createProduct = async (data: CreateProductDTO) => {
   return prisma.producto.create({ data });
 };
 
-export const updateProduct = async (id: number, data: Partial<Producto>): Promise<Producto> => {
+export const updateProduct = async (id: number, data: UpdateProductDTO) => {
   return prisma.producto.update({ where: { id }, data });
 };
 
