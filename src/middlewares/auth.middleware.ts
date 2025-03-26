@@ -16,7 +16,7 @@ export const protect = (req: Request, res: Response, next: NextFunction): void =
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'SECRET_KEY') as JwtPayload;
+    const decoded = jwt.verify(token, process.env.SECRET_JWT_KEY || 'SECRET_KEY') as JwtPayload;
     req.body.userId = decoded.userId;
     next();
   } catch (error) {
