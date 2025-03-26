@@ -1,8 +1,10 @@
+import { Role } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface JwtPayload {
   userId: number;
+  rol: Role;
 }
 
 export const protect = (req: Request, res: Response, next: NextFunction): void => {
@@ -17,11 +19,16 @@ export const protect = (req: Request, res: Response, next: NextFunction): void =
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_JWT_KEY || 'SECRET_KEY') as JwtPayload;
-    req.body.userId = decoded.userId;
-    next();
+    console.log('DEBUG: auth middleware ', decoded);
+
+    if (decoded.rol === 'CLIENTE') {
+      res.status(401).json({ error: 'No autorizado' });
+      return;
+    }
+
+    next()
   } catch (error) {
     res.status(401).json({ error: 'Token inválido o expirado' });
     return;
   }
 };
-

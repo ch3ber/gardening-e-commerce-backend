@@ -36,7 +36,7 @@ export const login = async (req: Request, res: Response) => {
 
   try {
     const user = await loginUser(email, password);
-    const token = generateToken(user.id);
+    const token = generateToken(user.id, user.rol);
     res.json({ token });
   } catch (error) {
     res.status(401).json({ error: (error as Error).message });
