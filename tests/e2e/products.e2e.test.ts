@@ -11,6 +11,11 @@ let createdProductId: number;
 
 describe('E2E Productos API con DTO (/api/v1/products)', () => {
   beforeAll(async () => {
+    await prisma.producto.deleteMany({ where: { creadoPor: adminNameDomie } });
+    await prisma.usuario.deleteMany({ where: { email: adminCredentialsDomie.email } });
+  });
+
+  beforeAll(async () => {
     await prisma.usuario.create({
       data: userAdminDomie
     });
